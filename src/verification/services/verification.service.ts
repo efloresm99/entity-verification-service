@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Verification } from '../schemas';
-import { CreateVerificationDto } from '../dtos';
+import { CreateVerificationDto, VerifyCodeDto } from '../dtos';
 import { ValidationEnum } from '../enums';
 import { VerificationDoc } from '../docs';
 
@@ -36,6 +36,26 @@ export class VerificationService {
     } catch (err) {
       return null;
     }
+  }
+
+  async verifyCode(verifyCodeDto: VerifyCodeDto): Promise<string> {
+    const entity = await this.verificationModel
+      .findOne({
+        verificationId: verifyCodeDto.verificationId,
+      })
+      .exec();
+    if (!entity) {
+      return null;
+    }
+    return entity.customId;
+  }
+
+  async deleteCode(verifyCodeDto: VerifyCodeDto): Promise<void> {
+    await this.verificationModel
+      .deleteOne({
+        verificationId: verifyCodeDto.verificationId,
+      })
+      .exec();
   }
 
   private createVerificationCode(format: ValidationEnum): string {

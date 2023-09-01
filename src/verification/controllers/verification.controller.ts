@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
 
 import { VerificationService } from '../services';
-import { CreateVerificationDto } from '../dtos';
+import { CreateVerificationDto, VerifyCodeDto } from '../dtos';
 import { VerificationDoc } from '../docs';
 
 @Controller()
@@ -13,5 +13,15 @@ export class VerificationController {
     createVerificationDto: CreateVerificationDto,
   ): Promise<VerificationDoc> {
     return this.verificationService.createVerification(createVerificationDto);
+  }
+
+  @MessagePattern({ cmd: 'verify' })
+  async verifyCode(verificationCode: VerifyCodeDto): Promise<string> {
+    return this.verificationService.verifyCode(verificationCode);
+  }
+
+  @EventPattern('delete_verification')
+  async deleteVerification(verificationCode: VerifyCodeDto): Promise<void> {
+    await this.verificationService.deleteCode(verificationCode);
   }
 }
