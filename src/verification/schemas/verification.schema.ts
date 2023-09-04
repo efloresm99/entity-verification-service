@@ -7,6 +7,9 @@ export class Verification {
 
   @Prop({ unique: true })
   verificationId: string;
+
+  @Prop({ default: Date.now(), expires: 600 })
+  createdAt: Date;
 }
 
 export const VerificationSchema = SchemaFactory.createForClass(Verification);
