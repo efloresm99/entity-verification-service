@@ -50,6 +50,18 @@ export class VerificationService {
     return entity.customId;
   }
 
+  async getOneVerificationByCustomId(customId: string): Promise<string> {
+    const verification = await this.verificationModel
+      .findOne({
+        customId,
+      })
+      .exec();
+    if (!verification) {
+      return null;
+    }
+    return verification.verificationId;
+  }
+
   async deleteCode(verifyCodeDto: VerifyCodeDto): Promise<void> {
     await this.verificationModel
       .deleteOne({

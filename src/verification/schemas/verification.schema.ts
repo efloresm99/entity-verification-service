@@ -8,7 +8,7 @@ export class Verification {
   @Prop({ unique: true })
   verificationId: string;
 
-  @Prop({ default: Date.now(), expires: 600 })
+  @Prop({ type: Date, expires: 600, default: Date.now })
   createdAt: Date;
 }
 
